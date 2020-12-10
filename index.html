@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Live Editor</title>
+    <meta name="author" content="SidPro">
+    <meta name="description" content="Live HTML,CSS,Javascript Simulator and you can download your code also cheer!">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.1/css/all.css" integrity="sha384-vp86vTRFVJgpjF9jiIGPEEqYqlDwgyBgEF109VFjmqGmIY/Y4HV4d3Gp2irVfcrp" crossorigin="anonymous">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ace.js" integrity="sha512-GZ1RIgZaSc8rnco/8CXfRdCpDxRCphenIiZ2ztLy3XQfCbQUSCuk8IudvNHxkRA3oUg6q0qejgN/qqyG1duv5Q==" crossorigin="anonymous">
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ext-language_tools.min.js"></script>
+    <style>
+      html,body{
+        margin: 0;
+        padding:0;
+        height:100%;
+        width: 100%;
+      }
+      #editor{
+        width: 49.6%;
+        height: 93.5%;
+        display: inline-block;
+      }
+      #ifrm{
+        width: 49.6%;
+        height: 93.5%;
+        float: right;
+        overflow: auto;
+        display: inline-block;
+      }
+      #resizel{
+        height: 93.5%;
+        width:0.8%;
+        cursor: col-resize;
+        background-color: black;
+        position: absolute;
+        user-select: none;
+        float: left;
+        display: inline-block;
+        background: rgb(36,32,30);
+        background: linear-gradient(180deg, rgba(36,32,30,1) 0%, rgba(92,161,16,0.5858543246400123) 100%);
+      }
+      .nav{
+        height: 5.5%;
+        width: 100%;
+        padding: 2px 0 0px 0;
+        background: rgb(36,32,30);
+        background: linear-gradient(180deg, rgba(36,32,30,1) 0%, rgba(92,161,16,0.5858543246400123) 100%);
+      }
+      select{
+        padding: 4px 0px 0px 0px;
+        margin: 0;
+        width: 150px;
+        height: 90%;
+        color:#45A29E;
+        font-family: Arial;
+        font-weight: bold;
+        font-size: 14px;
+        background:#1F2833 url('adjust-solid.svg') no-repeat 90% 50%;
+        -webkit-appearance: none;
+        appearance: none;
+        border: 1px solid #2e3340;
+        margin-left: 5px;
+        border-radius: 5px;
+      }
+      select:hover{
+        cursor: pointer;
+      }
+      label{
+        margin-left: 5px;
+        color:white;
+        font-family: Arial;
+        font-weight: bold;
+        font-size: 14px;
+      }
+      .switch {
+        position: relative;
+        display: inline-block;
+        width: 60px;
+        height: 34px;
+      }
+      .slider:hover{cursor: pointer;}
+      .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
+      .slider {
+        position: absolute;
+        cursor: pointer;
+        top: -7px;
+        left: 40px;
+        right: -40px;
+        bottom: 7px;
+        background-color: #ccc;
+        -webkit-transition: .4s;
+        transition: .4s;
+      }
+      .slider:before {
+        position: absolute;
+        content: "";
+        height: 26px;
+        width: 26px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        -webkit-transition: .4s;
+        transition: .4s;
+      }
+
+      input:checked + .slider {
+        background: rgb(36,32,30);
+        background: linear-gradient(180deg, rgba(36,32,30,1) 0%, rgba(92,161,16,0.5858543246400123) 100%);
+      }
+
+      input:focus + .slider {
+        box-shadow: 0 0 1px rgb(36,32,30);
+      }
+
+      input:checked + .slider:before {
+        -webkit-transform: translateX(26px);
+        -ms-transform: translateX(26px);
+        transform: translateX(26px);
+      }
+
+      /* Rounded sliders */
+      .slider.round {
+        border-radius: 34px;
+      }
+
+      .slider.round:before {
+        border-radius: 50%;
+      }
+      .btn {
+        background-color: DodgerBlue;
+        border: none;
+        color: white;
+        padding: 8px 24px;
+        height: auto;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+      }
+      /* Darker background on mouse-over */
+      .btn:hover {
+        background-color: RoyalBlue;
+
+      }
+
+      @media only screen and (max-width: 800px) {
+        .btn{
+          padding:6px 14px;
+          font-size: 14px;
+          height: auto;
+        }
+        select{
+          margin-left: 1%;
+          width: 150px;
+        }
+        .switch {
+          position: relative;
+          display: inline-block;
+          width: 40px;
+          height: 20px;
+        }
+        .slider {
+          position: absolute;
+          cursor: pointer;
+          top: 0px;
+          left: 40px;
+          right: -40px;
+          bottom: 0px;
+          background-color: #ccc;
+          -webkit-transition: .4s;
+          transition: .4s;
+        }
+        .slider:before {
+          position: absolute;
+          content: "";
+          height: 16px;
+          width: 16px;
+          left: 4px;
+          bottom: 2px;
+          background-color: white;
+          -webkit-transition: .4s;
+          transition: .4s;
+        }
+        input:checked + .slider:before {
+          -webkit-transform: translateX(16px);
+          -ms-transform: translateX(16px);
+          transform: translateX(16px);
+        }
+        #check{
+          float: right;
+        }
+        #resizel{
+          display: none;
+        }
+        #editor,#ifrm{
+          width: 50%;
+        }
+      }
+    </style>
+  </head>
+  <body onload="ready()" onresize="Reassign()">
+    <div class="nav">
+      <!-- <label for="theme">Theme :</label> -->
+      <select title="Select Theme" id="theme" size="1">
+        <option value="ace/theme/chrome">Chrome</option>
+        <option value="ace/theme/cobalt">Cobalt</option>
+        <option value="ace/theme/crimson_editor">Crimson Editor</option>
+        <option value="ace/theme/dracula">Dracula</option>
+        <option value="ace/theme/eclipse">Eclipse</option>
+        <option value="ace/theme/gruvbox">Gruvbox</option>
+        <option value="ace/theme/idle_fingers">Idle Fingers</option>
+        <option value="ace/theme/merbivore">Merbivore</option>
+        <option value="ace/theme/merbivore_soft">Merbivore Soft</option>
+        <option value="ace/theme/monokai" selected>Monokai</option>
+        <option value="ace/theme/sqlserver">Sqlserver</option>
+        <option value="ace/theme/terminal">Terminal</option>
+        <option value="ace/theme/xcode">Xcode</option>
+      </select>
+       <button title="Run Code" type="button" onclick="update();" class="btn tooltip"><i style="color:white" class="fas fa-play"></i></button>
+       <button title="Download File" type="button" onclick="download();" class="btn tooltip"><i class="fas fa-file-download"></i></button>
+      <label class="switch"><b>Auto</b>
+        <input id="check" type="checkbox">
+        <span title="Enable/Disable Live" class="slider round"></span>
+      </label>
+    </div>
+      <div id="editor">
+      </div>
+      <div id="resizel"></div>
+      <iframe id="ifrm" src="<!DOCTYPE html>
+<html>
+  <head>
+    <title>Title of the document</title>
+  </head>
+
+  <body>
+
+  The content of the document......
+  </body>
+</html>" frameBorder="0"></iframe>
+
+
+      <script>
+      function update() {
+        var x = document.getElementById('ifrm');
+        x.srcdoc = editor.getValue();
+      }
+      function setupEditor() {
+        window.editor = ace.edit("editor");
+        editor.getSession().setUseWorker(false);
+        editor.setOptions({
+          autoScrollEditorIntoView: true,
+          copyWithEmptySelection: false,
+          animatedScroll: true,
+          fontSize:16,
+          wrap:true,
+          enableBasicAutocompletion: true,
+          enableLiveAutocompletion: true,
+          enableSnippets: false,
+        });
+        editor.setTheme(document.getElementById('theme').value);
+        editor.session.setMode("ace/mode/html");
+        editor.setValue(`<!DOCTYPE html>
+  <html>
+    <head>
+      <title>Title of the document</title>
+    </head>
+
+    <body style="background:#2e3340;color:lightgray;font-size:18px">
+
+    The content of the document......
+    </body>
+  </html>`,1); // 1 = moves cursor to end
+          editor.getSession().on('change',function(){
+            $("#check").blur();
+            var x = document.getElementById('check');
+            if(x.checked == true)update();
+          });
+    }
+    function download() {
+      var filename = "sample-from-Live-DHTML.html";
+      var text = editor.getValue();
+      var element = document.createElement('a');
+      element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+      element.setAttribute('download', filename);
+      element.style.display = 'none';
+      document.body.appendChild(element);
+      element.click();
+      document.body.removeChild(element);
+    }
+    $("#check").blur();
+      function ready() {
+        setupEditor();
+        update();
+      }
+      $('#theme').on('change', function (ev) {
+          var mode = $('option:selected').attr('value');
+          editor.setTheme(mode);
+      });
+      // In order to make it draggable, we need to handle three events:
+      // mousedown on the element: Track the current position of mouse
+      // mousemove on document: Calculate how far the mouse has been moved, and determine the position of element
+      // mouseup on document: Remove the event handlers of document
+      // The current position of mouse
+      let x = 0;
+      //let y = 0;
+      // Query the element
+      const ele = document.getElementById('resizel');
+      const framel = document.getElementById('ifrm');
+      const editl = document.getElementById('editor');
+      function Reassign(){
+        if(window.innerWidth > 800){
+          framel.style.width = "49.6%";
+          editl.style.width = "49.6%";
+          editor.resize();
+        }else{
+          framel.style.width = "50%";
+          editl.style.width = "50%";
+          editor.resize();
+        }
+      }
+      // Handle the mousedown event that's triggered when user drags the element
+      const mouseDownHandler = function(e){
+        // Get the current mouse position
+        x = e.clientX;
+        //y = e.clientY;
+        // Attach the listeners to `document`
+      document.addEventListener('mousemove', mouseMoveHandler);
+      document.addEventListener('mouseup', mouseUpHandler);
+    };
+    const mouseMoveHandler = function(e) {
+      // How far the mouse has been moved
+      const dx = e.clientX - x;
+      //const dy = e.clientY - y;
+      // Set the position of element
+      if(dx>0){
+        framel.style.width = `${framel.offsetWidth - dx}px`;
+        editl.style.width = `${editl.offsetWidth + dx}px`;
+      }else{
+        editl.style.width = `${editl.offsetWidth + dx}px`;
+        framel.style.width = `${framel.offsetWidth - dx}px`;
+      }
+
+      editor.resize();
+      // Reassign the position of mouse
+      x = e.clientX;
+      //y = e.clientY;
+    };
+    const mouseUpHandler = function() {
+      // Remove the handlers of `mousemove` and `mouseup`
+      document.removeEventListener('mousemove', mouseMoveHandler);
+      document.removeEventListener('mouseup', mouseUpHandler);
+    };
+    ele.addEventListener('mousedown', mouseDownHandler);
+    </script>
+  </body>
+</html>
