@@ -21,12 +21,15 @@
       #editor{
         width: 49.6%;
         height: 93.5%;
+        min-width: 5%;
+        max-width: 94.2%;
         display: inline-block;
       }
       #ifrm{
-        width: 49.6%;
         height: 93.5%;
-        float: right;
+        width: 49.6%;
+        min-width: 5%;
+        max-width: 94.2%;
         overflow: auto;
         display: inline-block;
       }
@@ -35,9 +38,7 @@
         width:0.8%;
         cursor: col-resize;
         background-color: black;
-        position: absolute;
         user-select: none;
-        float: left;
         display: inline-block;
         background: rgb(36,32,30);
         background: linear-gradient(180deg, rgba(36,32,30,1) 0%, rgba(92,161,16,0.5858543246400123) 100%);
@@ -229,10 +230,7 @@
         <span title="Enable/Disable Live" class="slider round"></span>
       </label>
     </div>
-      <div id="editor">
-      </div>
-      <div id="resizel"></div>
-      <iframe id="ifrm" src="<!DOCTYPE html>
+      <div id="editor"></div><div id="resizel"></div><iframe id="ifrm" src="<!DOCTYPE html>
 <html>
   <head>
     <title>Title of the document</title>
@@ -307,12 +305,66 @@
       // mousemove on document: Calculate how far the mouse has been moved, and determine the position of element
       // mouseup on document: Remove the event handlers of document
       // The current position of mouse
+
+      const ele = document.getElementById('resizel');
+      const editl = ele.previousElementSibling;
+      const framel = ele.nextElementSibling;
+
+      // The current position of mouse
       let x = 0;
       //let y = 0;
-      // Query the element
-      const ele = document.getElementById('resizel');
-      const framel = document.getElementById('ifrm');
-      const editl = document.getElementById('editor');
+
+      // Width of left side
+      let editlWidth = 0;
+      let framelWidth = 0;
+      // Handle the mousedown event
+      // that's triggered when user drags the ele
+      const mouseDownHandler = function(e) {
+          // Get the current mouse position
+          x = e.clientX;
+          //y = e.clientY;
+          editlWidth = editl.getBoundingClientRect().width;
+          framelWidth = framel.getBoundingClientRect().width;
+          // Attach the listeners to `document`
+          document.addEventListener('mousemove', mouseMoveHandler);
+          document.addEventListener('mouseup', mouseUpHandler);
+      };
+
+      // Attach the handler
+      ele.addEventListener('mousedown', mouseDownHandler);
+
+      const mouseMoveHandler = function(e) {
+          // How far the mouse has been moved
+          const dx = e.clientX - x;
+          //const dy = e.clientY - y;
+
+          const newLeftWidth = (editlWidth + dx) * 100 / ele.parentNode.getBoundingClientRect().width;
+          const newRightWidth = (framelWidth - dx) * 100 / ele.parentNode.getBoundingClientRect().width;
+          editl.style.width = `${newLeftWidth}%`;
+          framel.style.width = `${newRightWidth}%`;
+          editor.resize();
+          ele.style.cursor = 'col-resize';
+          document.body.style.cursor = 'col-resize';
+          editl.style.userSelect = 'none';
+          editl.style.pointerEvents = 'none';
+
+          framel.style.userSelect = 'none';
+          framel.style.pointerEvents = 'none';
+      };
+      const mouseUpHandler = function() {
+          ele.style.removeProperty('cursor');
+          document.body.style.removeProperty('cursor');
+
+          editl.style.removeProperty('user-select');
+          editl.style.removeProperty('pointer-events');
+
+          framel.style.removeProperty('user-select');
+          framel.style.removeProperty('pointer-events');
+
+          // Remove the handlers of `mousemove` and `mouseup`
+          document.removeEventListener('mousemove', mouseMoveHandler);
+          document.removeEventListener('mouseup', mouseUpHandler);
+      };
       function Reassign(){
         if(window.innerWidth > 800){
           framel.style.width = "49.6%";
@@ -324,39 +376,6 @@
           editor.resize();
         }
       }
-      // Handle the mousedown event that's triggered when user drags the element
-      const mouseDownHandler = function(e){
-        // Get the current mouse position
-        x = e.clientX;
-        //y = e.clientY;
-        // Attach the listeners to `document`
-      document.addEventListener('mousemove', mouseMoveHandler);
-      document.addEventListener('mouseup', mouseUpHandler);
-    };
-    const mouseMoveHandler = function(e) {
-      // How far the mouse has been moved
-      const dx = e.clientX - x;
-      //const dy = e.clientY - y;
-      // Set the position of element
-      if(dx>0){
-        framel.style.width = `${framel.offsetWidth - dx}px`;
-        editl.style.width = `${editl.offsetWidth + dx}px`;
-      }else{
-        editl.style.width = `${editl.offsetWidth + dx}px`;
-        framel.style.width = `${framel.offsetWidth - dx}px`;
-      }
-
-      editor.resize();
-      // Reassign the position of mouse
-      x = e.clientX;
-      //y = e.clientY;
-    };
-    const mouseUpHandler = function() {
-      // Remove the handlers of `mousemove` and `mouseup`
-      document.removeEventListener('mousemove', mouseMoveHandler);
-      document.removeEventListener('mouseup', mouseUpHandler);
-    };
-    ele.addEventListener('mousedown', mouseDownHandler);
     </script>
   </body>
 </html>
