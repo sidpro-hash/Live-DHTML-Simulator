@@ -4,7 +4,7 @@ Run HTML,CSS,javascript in Live Simulator Check temporary code of DHTML in it!
 **Features:**
 - Syntax highlighting
 - real time & Run
-- resizable
+- resizable & smooth
 - responsive
 - save & download
 
