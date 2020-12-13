@@ -1,6 +1,8 @@
 # Live-DHTML-Simulator
 Run HTML,CSS,javascript in Live Simulator Check temporary code of DHTML in it!
 
+![Image of Live-Editor](image/Live-Editor.png)
+
 **Features:**
 - Syntax highlighting
 - real time & Run
