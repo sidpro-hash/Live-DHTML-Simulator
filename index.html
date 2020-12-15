@@ -203,8 +203,17 @@
         #resizel{
           display: none;
         }
-        #editor,#ifrm{
-          width: 50%;
+        #ifrm{
+          max-width: 100%;
+          width: 100%;
+          height: 100%;
+          display: block;
+        }
+        #editor{
+          max-width: 100%;
+          width: 100%;
+          height: 80%;
+          display: block;
         }
       }
     </style>
@@ -283,6 +292,12 @@
             var x = document.getElementById('check');
             if(x.checked == true)update();
           });
+          if(window.innerWidth > 800){
+            editor.setOptions({
+              enableBasicAutocompletion: false,
+              enableLiveAutocompletion: false,
+            });
+          }
     }
     function download() {
       var filename = "sample-from-Live-DHTML.html";
@@ -373,10 +388,18 @@
         if(window.innerWidth > 800){
           framel.style.width = "49.6%";
           editl.style.width = "49.6%";
+          editor.setOptions({
+            enableBasicAutocompletion: true,
+            enableLiveAutocompletion: true,
+          });
           editor.resize();
         }else{
-          framel.style.width = "50%";
-          editl.style.width = "50%";
+          framel.style.width = "100%";
+          editl.style.width = "100%";
+          editor.setOptions({
+            enableBasicAutocompletion: false,
+            enableLiveAutocompletion: false,
+          });
           editor.resize();
         }
       }
