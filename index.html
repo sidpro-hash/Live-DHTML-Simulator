@@ -310,6 +310,7 @@
       element.click();
       document.body.removeChild(element);
     }
+    window.onbeforeunload = function(event){return confirm("Confirm refresh");}
     $("#check").blur();
       function ready() {
         setupEditor();
