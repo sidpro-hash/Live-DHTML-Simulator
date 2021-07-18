@@ -262,6 +262,8 @@
         x.srcdoc = editor.getValue();
       }
       function setupEditor() {
+      var config = require("ace/config");
+	config.init();
         window.editor = ace.edit("editor");
         editor.getSession().setUseWorker(false);
         editor.setOptions({
@@ -283,8 +285,10 @@
     </head>
 
     <body style="background:#2e3340;color:lightgray;font-size:18px">
-    <!-- Ctrl + to increase font size -->
-    <!-- Ctrl - to decrease font size -->
+    <!-- 'Ctrl +' to increase font size -->
+    <!-- 'Ctrl -' to decrease font size -->
+    <!-- 'Ctrl 0' to Reset Font size -->
+    <!-- 'Ctrl Alt h' for more help -->
     The content of the document......
     </body>
   </html>`,1); // 1 = moves cursor to end
@@ -313,6 +317,24 @@
 		fontp = ((fontp - 2) < 12 ?12:(fontp-2));
 		editor.setFontSize(fontp);
 		editor.resize();
+	    }
+	 });
+	 editor.commands.addCommand({
+	     name: "resetFontSize",
+	    bindKey: {win: 'Ctrl+0|Ctrl-Numpad0',  mac: 'Command+0|Command-Numpad0'},
+	    exec: function(editor) {
+		editor.setFontSize(16);
+		editor.resize();
+	    }
+	 });
+	 editor.commands.addCommand({
+	     name: "showKeyboardShortcuts",
+    	     bindKey: {win: "Ctrl-Alt-h", mac: "Command-Alt-h"},
+	    exec: function(editor) {
+		config.loadModule("ace/ext/keybinding_menu", function(module) {
+		    module.init(editor);
+		    editor.showKeyboardShortcuts();
+		});
 	    }
 	 });
           if(window.innerWidth > 800){
