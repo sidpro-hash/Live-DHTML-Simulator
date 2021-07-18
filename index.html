@@ -297,7 +297,7 @@
 	    name: 'increasefontsize',
 	    bindKey: {win: 'Ctrl-+',  mac: 'Command-+'},
 	    exec: function(editor) {
-	    	console.log("function");
+	    
 		let fontp = editor.getFontSize();
 		fontp = ((fontp + 2) > 30 ?30:(fontp+2));
 		editor.setFontSize(fontp);
@@ -308,7 +308,7 @@
 	    name: 'decreasefontsize',
 	    bindKey: {win: 'Ctrl--',  mac: 'Command--'},
 	    exec: function(editor) {
-	    	console.log("function");
+	    
 		let fontp = editor.getFontSize();
 		fontp = ((fontp - 2) < 12 ?12:(fontp-2));
 		editor.setFontSize(fontp);
