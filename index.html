@@ -283,7 +283,8 @@
     </head>
 
     <body style="background:#2e3340;color:lightgray;font-size:18px">
-
+    <!-- Ctrl + to increase font size -->
+    <!-- Ctrl - to decrease font size -->
     The content of the document......
     </body>
   </html>`,1); // 1 = moves cursor to end
@@ -292,6 +293,28 @@
             var x = document.getElementById('check');
             if(x.checked == true)update();
           });
+          editor.commands.addCommand({
+	    name: 'increasefontsize',
+	    bindKey: {win: 'Ctrl-+',  mac: 'Command-+'},
+	    exec: function(editor) {
+	    	console.log("function");
+		let fontp = editor.getFontSize();
+		fontp = ((fontp + 2) > 30 ?30:(fontp+2));
+		editor.setFontSize(fontp);
+		editor.resize();
+	    }
+	 });
+	 editor.commands.addCommand({
+	    name: 'decreasefontsize',
+	    bindKey: {win: 'Ctrl--',  mac: 'Command--'},
+	    exec: function(editor) {
+	    	console.log("function");
+		let fontp = editor.getFontSize();
+		fontp = ((fontp - 2) < 12 ?12:(fontp-2));
+		editor.setFontSize(fontp);
+		editor.resize();
+	    }
+	 });
           if(window.innerWidth > 800){
             editor.setOptions({
               enableBasicAutocompletion: false,
